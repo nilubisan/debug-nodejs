@@ -1,8 +1,10 @@
 const Sequelize = require('sequelize');
+const { DataTypes } = require('sequelize')
                                 //database username   password
 const sequelize = new Sequelize('gamedb', 'postgres', 'ghastb0i', {
-    host: 'localhost',
-    dialect: 'postgres'
+    host: process.env.DATABASE_HOST,
+    dialect: 'postgres',
+    port: 5433
 })
 
 sequelize.authenticate().then(
@@ -14,3 +16,5 @@ sequelize.authenticate().then(
         console.log(`Error: ${err}`);
     }
 )
+
+module.exports = { sequelize, DataTypes }
