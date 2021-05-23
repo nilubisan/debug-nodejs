@@ -1,4 +1,4 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('user', {
         full_name: {
             type: DataTypes.STRING,

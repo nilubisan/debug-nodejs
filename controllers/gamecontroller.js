@@ -1,17 +1,16 @@
-var router = require('express').Router();
+const router = require('express').Router();
 const { sequelize, DataTypes } = require('../db')
-var Game = require('../models/game')(sequelize, DataTypes);
+const Game = require('../models/game')(sequelize, DataTypes);
 router.get('/all', (req, res) => {
     Game.findAll({ where: { owner_id: req.user.id } })
         .then(
-            function findSuccess(data) {
+            (data) => {
                 res.status(200).json({
                     games: data,
                     message: "Data fetched."
                 })
             },
-
-            function findFail(data) {
+            (data) => {
                 console.log(data)
                 res.status(500).json({
                     message: "Data not found"
@@ -23,13 +22,12 @@ router.get('/all', (req, res) => {
 router.get('/:id', (req, res) => {
     Game.findOne({ where: { id: req.params.id, owner_id: req.user.id } })
         .then(
-            function findSuccess(game) {
+                (game) => {
                 res.status(200).json({
                     game: game
                 })
-            },
-
-            function findFail(err) {
+                },
+                (err) => {
                 res.status(500).json({
                     message: "Data not found."
                 })
@@ -47,14 +45,13 @@ router.post('/create', (req, res) => {
         have_played: req.body.game.have_played
     })
         .then(
-            function createSuccess(game) {
+            (game) => {
                 res.status(200).json({
                     game: game,
                     message: "Game created."
                 })
             },
-
-            function createFail(err) {
+            (err) => {
                 res.status(500).send(err.message)
             }
         )
@@ -75,18 +72,18 @@ router.put('/update/:id', (req, res) => {
             },
         })
         .then(
-            function resHandler(response) {
-                if(response[0] === 0) {
-                    res.status(404).json({
-                        message: "Data not found."
-                    })
+                (response) => {
+                    if(response[0] === 0) {
+                        res.status(404).json({
+                            message: "Data not found."
+                        })
                 } else {
                     res.status(200).json({
                         message: "Successfully updated."
                     })
                 }
-            },
-            function updateFail(err) {
+                },
+                (err) => {
                 res.status(500).json({
                     message: err.message
                 })
@@ -97,7 +94,7 @@ router.put('/update/:id', (req, res) => {
 router.delete('/remove/:id', (req, res) => {
     return Game.findOne({ where: { id: req.params.id, owner_id: req.user.id } })
     .then(
-        function resHandler(gameModel) {
+            (gameModel) => {
             if(gameModel === null) {
                 res.status(404).json({
                     message: "Data not found."
@@ -121,8 +118,8 @@ router.delete('/remove/:id', (req, res) => {
                     })
                 })    
             }
-        },
-        function deleteFail(err) {
+            },
+            (err) => {
             res.status(500).json({
                 error: err.message
             })
